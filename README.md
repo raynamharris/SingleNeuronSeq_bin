@@ -6,15 +6,15 @@ This directory contains only the scripts used for data analysis. Data and result
 
 The current scripts and order of operations are:
 
-01_gsaf_download.sh
-02_trimreads.slurm
-03_qualityfilter.slurm
-04_kallisto.index.slurm
-05_run_kallisto.slurm
-06_kallisto_gather.R
-07_dplyrmutate.R
-08_ERCC_counts.R
-09_DESeq.R
+1. 01_gsaf_download.sh
+2. 02_trimreads.slurm
+3. 03_qualityfilter.slurm
+4. 04_kallisto.index.slurm
+5. 05_run_kallisto.slurm
+6. 06_kallisto_gather.R
+7. 07_dplyrmutate.R
+8. 08_ERCC_counts.R
+9. 09_DESeq.R
 
 
 **01_gsaf_download.sh**
@@ -38,8 +38,8 @@ Gathing the data from individual abundance.tsv files into a single counts fie
 **07_dplyrmutate.R**
 Wrangling the data
 
-08_ERCC_counts.R
+**08_ERCC_counts.R**
 Checking the quality of reads by way of our ERCC counts
 
-09_DESeq.R
+**09_DESeq.R**
 Analyzing differential gene expression
