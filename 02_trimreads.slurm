@@ -1,7 +1,8 @@
 #!/bin/bash
 
 #SBATCH -J trimreads # Job name
-#SBATCH -o trimreads%j.out  # Name of stdout output file (%j expands to job$
+#SBATCH -o trimreads.out.%j  # Name of stdout output file (%j expands to job$
+#SBATCH -e trimreads.error.%j
 #SBATCH -p 'normal'     # Queue name
 #SBATCH -n 1   # Total number of  tasks requested
 #SBATCH -N 1
@@ -12,32 +13,32 @@
 
 ## USAGE: sbatch trimreads.slurm
 
-# move to directory with raw reads
-cd ../data/JA16033/2016-02-04-raw_reads
+## make a results directory 
+mkdir ../results/02_trimmedreads_2016-02-29
 
-#this just test to make sure the renaming and name calling is working
+## move to directory with JA16033 raw reads, loop over R1s, make new variabiles for R2 and output files for all treimmed reads, move files into results
+cd ../data/JA16033/2016-02-04-raw_reads
 for R1 in *R1_001.fastq.gz 
 do
-     	echo $R1
-     	newR1="$(basename $R1 .fastq.gz)"
-     	echo $newR1
+     	trimmedR1="$(basename $R1 .fastq.gz).trimmed.fastq"
+     	echo $R1 $trimmedR1
      	R2="$(basename $R1 R1_001.fastq.gz)R2_001.fastq.gz"
-     	echo $R2
-     	newR2="$(basename $R2 .fastq.gz)"
-     	echo $newR2
-     	echo "${newR1}.trimmed.fastq"
-     	echo "${newR2}.trimmed.fastq"
-done 
-
-#this will perform cutadapt on paired end reads
-for R1 in *R1_001.fastq.gz
-do
-     echo working with $R1
-     newR1="$(basename $R1 .fastq.gz)"
-     R2="$(basename $R1 R1_001.fastq.gz)R2_001.fastq.gz"
-     newR2="$(basename $R2 .fastq.gz)"
-     cutadapt -a GATCGGAAGAGCACACGTCTGAACTCCA -A ATCGTCGGACTGTAGAACTCTGAACGTG -m 22 -o  "${newR1}.trimmed.fastq" -p "${newR2}.trimmed.fastq" $R1 $R2 
+     	trimmedR2="$(basename $R2 .fastq.gz).trimmed.fastq"
+     	echo $R2 $trimmedR2
+     	cutadapt -a GATCGGAAGAGCACACGTCTGAACTCCA -A ATCGTCGGACTGTAGAACTCTGAACGTG -m 22 -o  $trimmedR1 -p trimmedR2 $R1 $R2 
 done
+mv *.trimmed.fastq ../../../results/2016-02-10-trimmed_reads/
 
-#move files to new directory
-mv *.trimmed.fastq 2016-02-10-trimmed_reads/
+
+## move to directory with JA15597 raw reads, loop over R1s, make new variabiles for R2 and output files for all treimmed reads, move files into results
+cd ../../JA15597
+for R1 in *R1_001.fastq.gz 
+do
+     	trimmedR1="$(basename $R1 .fastq.gz).trimmed.fastq"
+     	echo $R1 $trimmedR1
+     	R2="$(basename $R1 R1_001.fastq.gz)R2_001.fastq.gz"
+     	trimmedR2="$(basename $R2 .fastq.gz).trimmed.fastq"
+     	echo $R2 $trimmedR2
+     	cutadapt -a GATCGGAAGAGCACACGTCTGAACTCCA -A ATCGTCGGACTGTAGAACTCTGAACGTG -m 22 -o  $trimmedR1 -p trimmedR2 $R1 $R2 
+done
+mv *.trimmed.fastq ../../results/2016-02-10-trimmed_reads/
