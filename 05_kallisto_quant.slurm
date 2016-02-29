@@ -7,7 +7,7 @@
 #SBATCH -e kallisto_quant.error.%j   # Name of stdout error file
 #SBATCH -p 'normal'     # Queue name
 #SBATCH -n 16   # Total number of  tasks requested
-#SBATCH -t 08:05:00     # Run time (hh:mm:ss)
+#SBATCH -t 24:00:00     # Run time (hh:mm:ss)
 #SBATCH --mail-user=rayna.harris@utexas.edu     # email to notify
 #SBATCH --mail-type=END # when to notify email
 #SBATCH -A NeuroEthoEvoDevo     # Allocation name to charge job against
@@ -23,8 +23,8 @@ module load kallisto
 
 ## move to directory with reads to be psudomapped 
 
-cd ../data/JA16033/2016-02-10-trimmed_reads
-mkdir 2016-02-28_trimmed_reads_kallisto_quant
+cd ../results/02_trimmedreads_2016-02-29
+mkdir 05_kallistoquant_trimmedreads_2016_02-29
 
 ## check that the file names match
 
@@ -33,7 +33,7 @@ for R1 in *R1_001.trimmed.fastq; do
     R2=$(basename $R1 R1_001.trimmed.fastq)R2_001.trimmed.fastq
     samp=$(basename $R1 _R1_001.trimmed.fastq)
     echo $R1 $R2 $samp
-    kallisto quant -i /work/02189/rmharris/SingleNeuronSeq/data/reference_genomes/combo.idx -o 2016-02-28_trimmed_reads_kallisto_quant/${samp} $R1 $R2
+    kallisto quant -i /work/02189/rmharris/SingleNeuronSeq/data/reference_genomes/combo.idx -o 05_kallistoquant_trimmedreads_2016_02-29/${samp} $R1 $R2
 done    
     
 mv 2016-02-28_trimmed_reads_kallisto_quant ../
