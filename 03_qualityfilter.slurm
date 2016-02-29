@@ -16,27 +16,26 @@ module load fastqc
 module load fastx_toolkit
 
 # move to directory with rad data
-cd ../data/JA16033/2016-02-10-trimmed_reads
+cd ../results/02_trimmedreads_2016-02-29
 
-
-#this will trim using the fastx toolkit on R1 reads
+#this will trim using the fastx toolkit on R1 and then the R2 reads
 for R1 in *R1_001.trimmed.fastq"
 do
      echo working with $R1
-     newR1="$(basename $R1 .trimmed.fastq)"
-     fastq_quality_filter -Q33 -q 30 -p 50 | gzip -9c > "${newR1}.trimmed_filtered.fastq.gz"
+     filteredR1="$(basename $R1 fastq).filtered.fastq"
+     fastq_quality_filter -q 30 -p 50 -z -i $R1 -o $filteredR1
 done
 
-#this will trim using the fastx toolkit on R2 reads
 for R2 in *R2_001.trimmed.fastq"
 do
      echo working with $R2
-     newR2="$(basename $R2 .trimmed.fastq)"
-     fastq_quality_filter -Q33 -q 30 -p 50 | gzip -9c > "${newR2}.trimmed_filtered.fastq.gz"
+     filteredR2="$(basename $R2 fastq).filtered.fastq"
+     fastq_quality_filter -q 30 -p 50 -z -i $R2 -o $filteredR2
 done
 
-mkdir 2016-02-26_trimmed_filtered
-mv *trimmed_filtered.fastq.gz  2016-02-26_trimmed_filtered/
+mkdir 03_trimmed_filtered_2016-02-29
+mv *trimmed_filtered.fastq.gz  03_trimmed_filtered_2016-02-29
+mv 03_trimmed_filtered_2016-02-29/ ..
 
 
 
