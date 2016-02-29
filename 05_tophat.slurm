@@ -21,14 +21,14 @@ module load tophat/2.0.13
 ## Rat ref index is here: /work/02189/rmharris/SingleNeuronSeq/data/reference_genomes/Rattus_norvegicus/UCSC/rn5/Annotation/Archives/archive-current/Genes/genes.gtf 
 
 # move to folder with trimmed reads
-cd ../data/JA16033/2016-02-10-trimmed_reads
+cd ../results/02_trimmedreads_2016-02-29
 
 ## loop through all R1 and R2 files to create R1s and R2s
 for R1 in *R1_001.trimmed.fastq; do
     R2=$(basename $R1 R1_001.trimmed.fastq)R2_001.trimmed.fastq
     samp=$(basename $R1 _R1_001.trimmed.fastq)
     echo $R1 $R2 $samp
-    tophat -p 2 -r 200 -G /work/02189/rmharris/SingleNeuronSeq/data/reference_genomes/Mus_musculus/UCSC/mm10/Sequence/BWAIndex/version0.5.x/genome.fa $R1 $R2
+    tophat -p 2 -r 200 -G   /work/02189/rmharris/SingleNeuronSeq/data/reference_genomes/Mus_musculus/UCSC/mm10/Annotation/Genes/genes.gtf /work/02189/rmharris/SingleNeuronSeq/data/reference_genomes/Mus_musculus/UCSC/mm10/Sequence/Bowtie2Index/*.bt2 $R1 $R2
 done 
 
 
