@@ -8,8 +8,7 @@ echo '#SBATCH -J qualityfilter' >> 03_qualityfilter.slurm
 echo '#SBATCH -o qualityfilter.out.%j' >> 03_qualityfilter.slurm 
 echo '#SBATCH -e qualityfilter.error.%j' >> 03_qualityfilter.slurm  
 echo '#SBATCH -t 03:00:00' >> 03_qualityfilter.slurm 
-echo '#SBATCH -n 4' >> 03_qualityfilter.slurm 
-echo '#SBATCH -N 4' >> 03_qualityfilter.slurm 
+echo '#SBATCH -n 112' >> 03_qualityfilter.slurm 
 echo '#SBATCH --mail-user rayna.harris@utexas.edu' >> 03_qualityfilter.slurm 
 echo '#SBATCH --mail-type END' >> 03_qualityfilter.slurm 
 echo '#SBATCH -A NeuroEthoEvoDevo' >> 03_qualityfilter.slurm 
@@ -27,6 +26,7 @@ echo 'cd '../results/02_trimmedreads_2016-02-29/ >> 03_qualityfilter.slurm
 
 
 #this will trim using the fastx toolkit on R1 and then the R2 reads
+# I'm using basename function to create a new filename for the reads after filtering
 for R1 in *R1_001.trimmed.fastq
 do
      filteredR1="$(basename $R1 .fastq)_filtered.fastq.gz"
@@ -45,13 +45,14 @@ fastq_quality_filter -Q 33 -q 20 -p 50 -z -i $R2 -o $filteredR2
 EOF
 done
 
+#now for some clean
 echo 'mkdir 03_trimmedreads_filtered_2016-03-01/' >> 03_qualityfilter.slurm
 echo 'mv *.filtered.fastq.gz 03_trimmedreads_filtered_2016-03-01/' >> 03_qualityfilter.slurm
-echo 'mv -r 03_trimmedreads_filtered_2016-03-01/ ..' >> 03_qualityfilter.slurm
+echo 'mv -03_trimmedreads_filtered_2016-03-01/ ..' >> 03_qualityfilter.slurm
 
+## now move the script to the bin sow it can be exectuted with sbatch
 mv 03_qualityfilter.slurm /work/02189/rmharris/SingleNeuronSeq/bin/
 
-## Now, this script should appear in bin. To execute, type sbatch 03_qualityfilter.sh 
 
 
 
