@@ -10,14 +10,16 @@ The workflows with a breif (ish) descirption of each is descibed below
 
 ### 1. Download raw data from the cloud
 	`01_gsaf_download.sh`
+The Genomic Sequencing Analysis Facility (GSAF) uses Amazon We
+
 
 ### 2. Trim adapters with **Cutadapt**
 	`02_trimreads.slurm`
 
 ### 3. Quality filter reads with **Fastx Toolkit**
-	`03_qualityfilter_cmds.sh `  
-	`03_qualityfilter_launcher.sbatch`  
-	`03_qualityfilter_launcher_cleanup.sh`  
+	'''03_qualityfilter_cmds.sh   
+	03_qualityfilter_launcher.sbatch 
+	03_qualityfilter_launcher_cleanup.sh''' 
 	
 	These three scripts should be executed in the order above. Briefly:  
 `03_qualityfilter_cmds.sh` loops through the raw read directory and creates a fastq_quality_filter command file `03_qualityfilter_cmds.cmds` with a fastq_quality_filter command for every read that in that directory. The output command file is saved in the directory with all the reads. 
