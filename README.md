@@ -1,10 +1,10 @@
 # SingleNeuronSeq
-Rayna M Harris
+Rayna M Harris  
 Last edited Feb 18, 2016
 
 This directory contains only the scripts used for data analysis. Data and results are  stored elsewhere. 
 
-The workflows are as follows. Detailed descriptions follow:
+The workflows are as follows. Detailed descriptions follow:  
 
 ## Read Processing
 
