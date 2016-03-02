@@ -17,20 +17,25 @@ Below is the workflow that worked for me with a breif(ish) description.
 
 The [Genomic Sequencing Analysis Facility (GSAF)](https://wikis.utexas.edu/display/GSAF/Home+Page) uses Amazon Web Services to deliver sequencing. Documentation for downloading data can be found [here](https://wikis.utexas.edu/display/GSAF/How+to+download+your+data).
 
-### 2. Trim adapters with **Cutadapt**
+### 2. Trim adapters with Cutadapt
 	02_trimreads.slurm
 
-### 3. Quality filter reads with **Fastx Toolkit**
+Documentation for Cutadapt can be found [here](https://cutadapt.readthedocs.org/en/stable/guide.html#basic-usage). I also use some parameders as recommened by my colleague, Dhivya Arrassapan, in this [Intro to RNA-seq course](http://ccbb.biosci.utexas.edu/summerschool.html). I learned how to write these forloops with basename from Titus Brown [here](https://github.com/ngs-docs/2016-adv-begin-shell-genomics).
+
+### 3. Quality filter reads with Fastx Toolkit
 	03_qualityfilter_cmds.sh   
 	03_qualityfilter_launcher.sbatch 
 	03_qualityfilter_launcher_cleanup.sh 
 
 To submit a job to filter the reads for all my samples at the same time, I came up with this approach. The order of opperations is as follows:   
+
 1. `03_qualityfilter_cmds.sh` loops through the raw read directory and creates a fastq_quality_filter command file `03_qualityfilter_cmds.cmds` with a fastq_quality_filter command for every read that in that directory. The output command file is saved in the directory with all the reads. 
 
 2. `03_qualityfilter_launcher.sbatch` was created by modifying TACC's `launcher_creator.sbatch` script. The modifications include: adjusting the number of tasks, job allocation, time, and email; adding the path to the working directory with files and the directory with the genome and gene annotation files; adding the modules that need to be loaded.
 
-3. `03_qualityfilter_launcher_cleanup.sh` is a script that moves all the newly-created filtered read files and the job output files to a new directory in results. 
+3. `03_qualityfilter_launcher_cleanup.sh` is a script that moves all the newly-created filtered read files and the job output files to a new directory in results.
+
+Documentation for Fastx Toolkit can be found [here] 
 
 ## Mapping and Counting Reads with the **Tuxedo Suite**  
 
