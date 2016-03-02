@@ -9,7 +9,7 @@ The workflows with a breif (ish) descirption of each is descibed below
 ## Read Processing
 
 ### 1. Download raw data from the cloud
-	`01_gsaf_download.sh`
+	01_gsaf_download.sh
 The Genomic Sequencing Analysis Facility (GSAF) uses Amazon We
 
 
