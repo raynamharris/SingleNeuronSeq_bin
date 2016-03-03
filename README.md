@@ -2,11 +2,13 @@
 Rayna M Harris  
 Last edited March 2, 2016
 
-This git repository contains only the scripts used for read processing and analysis. The data and results are stored elsewhere. For this project, I sequenced 56 samples, so I had to write a lot of for loops and learn how to launch many jobs at once. I came up with a **three-step solution to pseudo-parallelize** the processing of all my samples rather than one sample at a time. I think it keeps things nice and orderly.
+This git repository contains only the scripts used for read processing and analysis of one of my these projects. The data and results are stored elsewhere. 
 
-To keep track of when I did things, I implemented a **naming system**. All scripts start with a number (i.e. 01 or 05) to indicate where in the pipeline they occur. The output directories also start with this same number and end with the date. 
+To keep track of when I did things, I implemented a **naming system**. All scripts start with a number (i.e. 01 or 05) to indicate where in the pipeline they occur. The output directories also start with this same number and end with the date.
 
-Below is the workflow that worked for me with a breif(ish) description. 
+For this particular project, I sequenced 56 samples, so I had to write a lot of for loops and learn how to launch many jobs at once. I came up with a **three-step solution to pseudo-parallelize** the processing of all my samples rather than one sample at a time. I think it keeps things nice and orderly.
+
+ Below is the workflow that worked for me with a breif(ish) description. 
 
 ## Read Processing
 
@@ -33,7 +35,7 @@ To submit a job to filter the reads for all my samples at the same time, I came 
 
 3. `03_qualityfilter_launcher_cleanup.sh` is a script that moves all the newly-created filtered read files and the job output files to the new directory with the results results.
 
-Documentation for Fastx Quality Filter can be found [here](http://hannonlab.cshl.edu/fastx_toolkit/commandline.html#fastq_quality_filter_usage). I set some parameters based on suggestions by colleagues here [ 
+Documentation for Fastx Quality Filter can be found [here](http://hannonlab.cshl.edu/fastx_toolkit/commandline.html#fastq_quality_filter_usage). I set some parameters based on suggestions by colleagues [here](https://wikis.utexas.edu/display/bioiteam/FASTQ+Manipulation+Tools).
 
 
 ## Mapping and Counting Reads with the Tuxedo Suite  
@@ -66,7 +68,13 @@ The Tuxedo website provides links to a bunch of Illumina genomes [here](https://
 	
 ### 6. Gathering all the data from separate .tsv files into 1 dataframe
 	06_kallisto_gather.R
-Kallisto outputs three files for every sample into their own sub directories. The `abundance.tsv` file has the count data in terms of raw counts and transcripts per million. My colleague Dennis Whylie wrote this script to "gater" the data into an R dataframe.
+Kallisto outputs three files for every sample into their own sub directories. The `abundance.tsv` file has the count data in terms of raw counts and transcripts per million. My colleague Dennis Wylie wrote this script to "gather" the results from the abuntance.tsv files into an R dataframe.
+
+
+___
+
+Still working on improving these!
+
 
 ### 7. 	Kallisto Data Wrangling
 	07_dplyrmutate.R
