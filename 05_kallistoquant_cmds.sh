@@ -21,7 +21,7 @@ for R1 in *R1_001.trimmed_filtered.fastq.gz; do
     samp=$(basename $R1 _R1_001.trimmed_filtered.fastq.gz)
     echo $R1 $R2 $samp
     cat >> 05_kallistoquant_cmds.cmds <<EOF
-kallisto quant -i /work/02189/rmharris/SingleNeuronSeq/data/reference_genomes/combo.idx -o /scratch/02189/rmharris/results_scratch/05_kallistoquant_2016-03-02/${samp} $R1 $R2
+kallisto quant -i /work/02189/rmharris/SingleNeuronSeq/data/reference_genomes/combo.idx -o /scratch/02189/rmharris/SingleNeuronSeq/results/05_kallistoquant_2016-03-02/${samp} $R1 $R2
 EOF
 done
 

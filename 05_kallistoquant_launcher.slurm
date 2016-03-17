@@ -86,5 +86,5 @@ module load kallisto
 $TACC_LAUNCHER_DIR/paramrun $EXECUTABLE $CONTROL_FILE
 
 echo " "
-echo " 05_tophat_launcher.slurm Job Complete"
+echo " 05_kallisto_launcher.slurm Job Complete"
 echo " "
