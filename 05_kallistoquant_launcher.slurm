@@ -17,6 +17,7 @@
 #SBATCH -n 56                   # Total number of tasks
 #SBATCH -p normal              # Queue name
 #SBATCH -t 2:00:00             # Run time (hh:mm:ss)
+#SBATCH -o kallistoquant.o.%j
 #SBATCH --mail-user rayna.harris@utexas.edu     
 #SBATCH --mail-type END # when to notify email
 #SBATCH -A NeuroEthoEvoDevo    # sets the allocation if you have mutiple to chose from
