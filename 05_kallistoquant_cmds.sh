@@ -5,8 +5,8 @@
 
 ## make output directory on scratch
 ## take care to edit this so that you don't delete old files
-rm -rf /scratch/02189/rmharris/SingleNeuronSeq/results/05_kallistoquant_2016-03-16
-mkdir /scratch/02189/rmharris/SingleNeuronSeq/results/05_kallistoquant_2016-03-16
+rm -rf /scratch/02189/rmharris/SingleNeuronSeq/results/05_kallistoquant_2016-03-24
+mkdir /scratch/02189/rmharris/SingleNeuronSeq/results/05_kallistoquant_2016-03-24
 
 ## the $WORKING_DIRECTORY
 cd ../results/03_trimmedreads_filtered_2016-03-02
@@ -23,7 +23,7 @@ for R1 in *R1_001.trimmed_filtered.fastq.gz; do
     samp=$(basename $R1 _R1_001.trimmed_filtered.fastq.gz)
     echo $R1 $R2 $samp
     cat >> 05_kallistoquant_cmds.cmds <<EOF
-kallisto quant -i /work/02189/rmharris/SingleNeuronSeq/data/reference_genomes/combo.idx -o /scratch/02189/rmharris/SingleNeuronSeq/results/05_kallistoquant_2016-03-16/${samp}  --single -l 150 -s 20 --pseudobam $R1
+kallisto quant -i /work/02189/rmharris/SingleNeuronSeq/data/reference_genomes/combo.idx -b 100 -o /scratch/02189/rmharris/SingleNeuronSeq/results/05_kallistoquant_2016-03-16/${samp} $R1 $R2
 EOF
 done
 
@@ -34,11 +34,6 @@ wc 05_kallistoquant_cmds.cmds
 ## edit the 05_kallistoquant_launcher.slurm script  then launch
 # sbatch 05_kallistoquant_launcher.slurm  
 
-## On Wednesday night/Thrusday morning I chaned the script to omit R1
-## old: mkdir /scratch/02189/rmharris/results_scratch/05_kallistoquant_2016-03-02
-## old: kallisto quant -i /work/02189/rmharris/SingleNeuronSeq/data/reference_genomes/combo.idx -o /scratch/02189/rmharris/SingleNeuronSeq/results/05_kallistoquant_2016-03-02/${samp} $R1 $R2
-### added  --single 
-### adde --fragment-length=DOUBLE , didn't work
 
 
 
