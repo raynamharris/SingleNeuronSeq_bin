@@ -8,14 +8,14 @@ devtools::install_github('pachterlab/sleuth')
 library("sleuth")
 
 
-base_dir <- "~/Github/SingleNeuronSeq/data/"
-sample_id <- dir(file.path(base_dir,"05_kallistoquant_2016-03-02"))
+base_dir <- "~/Github/SingleNeuronSeq/data"
+sample_id <- dir(file.path(base_dir,"05_kallistoquant_2016-03-24"))
 sample_id
-kal_dirs <- sapply(sample_id, function(id) file.path(base_dir, "05_kallistoquant_2016-03-02", id, "kallisto"))
+kal_dirs <- sapply(sample_id, function(id) file.path(base_dir, "05_kallistoquant_2016-03-24", id))
 kal_dirs
 
-s2c <- read.csv(file.path(base_dir, "2016-02-25-sample_annotation.csv"), header = TRUE, stringsAsFactors=FALSE)
-s2c <- dplyr::select(s2c, sample = run_accession, condition)
+s2c <- read.csv(file.path(base_dir, "2016-03-24-sample_annotation.csv"), sep=",", header = TRUE, stringsAsFactors=FALSE)
+s2c <- dplyr::select(s2c, sample = fileName, condition, library, tissue, RNAseqBatch, replicate)
 s2c
 
 s2c <- dplyr::mutate(s2c, path = kal_dirs)
@@ -26,14 +26,14 @@ print(s2c)
 ## (1) load the kallisto processed data into the object 
 ## (2) estimate parameters for the sleuth response error measurement model and 
 ## (3) perform differential analysis (testing). On a laptop the three steps should take about 2 minutes altogether.
-so <- sleuth_prep(s2c, ~ condition)
+so <- sleuth_prep(s2c, ~  condition)
 so <- sleuth_fit(so)
-so <- sleuth_wt(so, 'conditionscramble')
+so <- sleuth_wt(so, 'conditionneuron.bio')
 models(so)
 
 
 ## Since the example was constructed with the ENSEMBL human transcriptome, we will add gene names from ENSEMBL using biomaRt (there are other ways to do this as well):
-mart <- biomaRt::useMart(biomart = "ensembl", dataset = "hsapiens_gene_ensembl")
+mart <- biomaRt::useMart(biomart = "ensembl", dataset = "mmusculus_gene_ensembl")
 ## Creating a generic function for 'nchar' from package 'base' in package 'S4Vectors'
 t2g <- biomaRt::getBM(attributes = c("ensembl_transcript_id", "ensembl_gene_id",
                                      "external_gene_name"), mart = mart)
@@ -41,6 +41,6 @@ t2g <- dplyr::rename(t2g, target_id = ensembl_transcript_id,
                      ens_gene = ensembl_gene_id, ext_gene = external_gene_name)
 so <- sleuth_prep(s2c, ~ condition, target_mapping = t2g)
 so <- sleuth_fit(so)
-so <- sleuth_wt(so, which_beta = 'conditionscramble')
+so <- sleuth_wt(so, which_beta = 'conditionneuron.bio')
 sleuth_live(so)
-results_table <- sleuth_results(so, 'conditionscramble')
+results_table <- sleuth_results(so, 'conditionneuron.bio')
