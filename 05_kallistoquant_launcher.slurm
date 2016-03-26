@@ -79,7 +79,7 @@ echo " WORKING DIR:   $WORKDIR/"
 
 module use /work/03439/wallen/public/modulefiles
 module swap intel gcc/4.9.1
-module load hdf5/1.8.15
+module load hdf5/1.8.16
 module load zlib/1.2.8
 module load gcc/4.9.1
 module load kallisto
