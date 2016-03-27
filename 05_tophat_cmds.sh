@@ -3,7 +3,7 @@
 ## this script creates a list of top hat commands to execute fore every file in the folder
 ## the outhput is a .cmds file that will be called in the 05_tophat_launcher.slurm
 
-## parallelizing tophat
+#move to folder with trimmed filtere reads
 cd ../results/03_trimmedreads_filtered_2016-03-02
 
 ## in case there is an older version, let's delete the file, so we don't append to it
@@ -17,7 +17,7 @@ for R1 in *R1_001.trimmed_filtered.fastq.gz; do
     samp=$(basename $R1 _R1_001.trimmed_filtered.fastq.gz)
     echo $R1 $R2 $samp
     cat >> 05_tophat_cmds.cmds <<EOF
-tophat -p 2 -G /work/02189/rmharris/SingleNeuronSeq/data/reference_genomes/Mus_musculus/UCSC/mm10/Annotation/Genes/genes.gtf -o /scratch/02189/rmharris/results_scratch/05_tophat_2016-03-02/${samp}/ /work/02189/rmharris/SingleNeuronSeq/data/reference_genomes/Mus_musculus/UCSC/mm10/Sequence/Bowtie2Index/genome $R1 $R2
+tophat -p 2 -G /work/02189/rmharris/SingleNeuronSeq/data/reference_genomes/Mus_musculus/UCSC/mm10/Annotation/Genes/genes.gtf -o /scratch/02189/rmharris/SingleNeuronSeq/results/05_tophat_2016-03-02/${samp}/ /work/02189/rmharris/SingleNeuronSeq/data/reference_genomes/Mus_musculus/UCSC/mm10/Sequence/Bowtie2Index/genome $R1 $R2
 EOF
 done
 

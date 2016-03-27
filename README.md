@@ -50,6 +50,23 @@ The Tuxedo website provides links to a bunch of Illumina genomes [here](https://
 	05_tophat_launcher.slurm
 	05_tophat_launcher_cleanup.sh
 
+### 6. Mapping with TopHat
+	06_samtools_cmds.sh.sh
+	06_samtools_launcher.slurm
+	06_samtools_launcher_cleanup.sh
+
+Samtools has utilities for parsing and manipulating alignment files in SAM and BAM formats.  It is useful for sorting alignments, merging multiple alignments, coverting between SAM and BAM formats, retrieving reads with specific criterion, and collecting statistics about mapping results. 
+
+
+
+
+
+
+
+
+
+
+
 ## Mapping and Counting Reads with Kallisto
 
 ### 4. Creating the Kallisto Index from a Mouse genome
