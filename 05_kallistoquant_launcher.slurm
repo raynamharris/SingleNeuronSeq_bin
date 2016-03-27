@@ -25,7 +25,7 @@
 
 module load launcher
 setenv EXECUTABLE     $TACC_LAUNCHER_DIR/init_launcher 
-setenv CONTROL_FILE   05_kallistoquant_cmds.cmds
+setenv CONTROL_FILE   05_kallistoquant_MusUCSD.cmds
 setenv WORKDIR        /work/02189/rmharris/SingleNeuronSeq/results/03_trimmedreads_filtered_2016-03-02
 # 
 # Variable description:
