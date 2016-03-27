@@ -7,14 +7,14 @@ install.packages('devtools')
 devtools::install_github('pachterlab/sleuth')
 library("sleuth")
 
-
-base_dir <- "~/Github/SingleNeuronSeq/data"
-sample_id <- dir(file.path(base_dir,"05_kallistoquant_2016-03-24"))
+setwd("~/Github/SingleNeuronSeq/data")
+base_dir <- "~/Github/SingleNeuronSeq/results"
+sample_id <- dir(file.path(base_dir,"05_kallistoquant_ERCC92_2016-03-25"))
 sample_id
-kal_dirs <- sapply(sample_id, function(id) file.path(base_dir, "05_kallistoquant_2016-03-24", id))
+kal_dirs <- sapply(sample_id, function(id) file.path(base_dir, "05_kallistoquant_ERCC92_2016-03-25", id))
 kal_dirs
 
-s2c <- read.csv(file.path(base_dir, "2016-03-24-sample_annotation.csv"), sep=",", header = TRUE, stringsAsFactors=FALSE)
+s2c <- read.csv("2016-03-25-sample_annotation.csv", sep=",", header = TRUE, stringsAsFactors=FALSE)
 s2c <- dplyr::select(s2c, sample = fileName, condition, library, tissue, RNAseqBatch, replicate)
 s2c
 
