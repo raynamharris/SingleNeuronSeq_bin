@@ -7,9 +7,9 @@
 ## /scratch/02189/rmharris/SingleNeuronSeq/results/05_kallistoquant_2016-03-02
 
 ## if on local, wd is 
-setwd("~/Github/SingleNeuronSeq/data/05_kallistoquant_2016-03-02")
+setwd("~/Github/SingleNeuronSeq/data/2016-06-03-05-Cborealis-cds-kallisto")
 ## this will create lists of all the samples
-kallistoDirs = dir("~/Github/SingleNeuronSeq/data/05_kallistoquant_2016-03-02")
+kallistoDirs = dir("~/Github/SingleNeuronSeq/data/2016-06-02-05-Cborealis-cds-kallisto")
 kallistoDirs = kallistoDirs[!grepl("\\.(R|py|pl|sh|xlsx?|txt|tsv|csv|org|md|obo|png|jpg|pdf)$",
         kallistoDirs, ignore.case=TRUE)]
 
@@ -50,9 +50,11 @@ tail(counts)
 ## perl -pe 's/,\"(.*?)\|.*?\|.*?\|.*?\|.*?\|(.*?)\|(.*?)\|(.*?)\|/,\"\2_\1_\3_\4/g' counts.csv > counts_rename.csv
 
 write.csv(counts, "counts.csv", row.names=FALSE)
-counts_rename <- read.csv("counts_rename.csv", header=TRUE, sep=',')
-head(counts_rename)
-tail(counts_rename)
+write.csv(tpm, "tpm.csv", row.names=FALSE)
+
+#counts_rename <- read.csv("counts_rename.csv", header=TRUE, sep=',')
+#head(counts_rename)
+#tail(counts_rename)
 
 ## workspace saved as kallisto_gather.Rdata for easy import
 #save.image("/Users/raynamharris/Github/SingleNeuronSeq/results/2016-02-25_results/2016-02-25_01-kallisto-gather.Rdata")

@@ -4,6 +4,7 @@
 
 #SBATCH -J index # Job name
 #SBATCH -o index.%j.out  # Name of stdout output file (%j expands to jobId)
+#SBATCH -e index.%j.e  # Name of stdout errpr file (%j expands to jobId)
 #SBATCH -p 'normal'     # Queue name
 #SBATCH -n 32   # Total number of  tasks requested
 #SBATCH -t 24:00:00     # Run time (hh:mm:ss)
@@ -22,7 +23,8 @@ module load zlib/1.2.8
 module load kallisto/0.42.3
 
 ## move to directory with genomes
-cd ../data/reference_genomes
+# cd ../data/reference_genomes ## only for rat mouse
+cd /scratch/02189/rmharris/Cborealis_ref # for C. borealis genomes
 
 ## download reference genome from the internet
 
@@ -39,7 +41,6 @@ cd ../data/reference_genomes
 ## Build the kallisto index
 # usage: kallisto index -i <kallistoindexname.idx> <genomefilename.fa>
 
-
 # used this to make the mouse genome index
 # kallisto index -i gencode.vM7.transcripts.idx gencode.vM7.transcripts.fa
 
@@ -49,3 +50,9 @@ cd ../data/reference_genomes
 # used this to make a "combo" index wiht both the rat genome and the ERCC "genome"
 # cat gencode.vM7.transcripts.fa ERCC92.fa > combo.fa
 # kallisto index -i combo.idx combo.fa
+
+# used this to make the C. borealis cds transcriptome and candidate gene indeces
+
+kallisto index -i Cborealis_candidategenes.idx SchulzD_Cb_CDS_CHR.fasta
+kallisto index -i Cborealis_transcriptome.idx Cborealis_ref.fa
+

@@ -18,12 +18,15 @@
 #SBATCH -p normal              # Queue name
 #SBATCH -t 00:30:00            # Run time (hh:mm:ss)
 #SBATCH -A NeuroEthoEvoDevo    # sets the allocation if you have mutiple to chose from
+#SBATCH -o cutadapt.o%j
+#SBATCH -e cutadapt.e%j
 #------------------------------------------------------
 
 module load launcher
 setenv EXECUTABLE     $TACC_LAUNCHER_DIR/init_launcher 
 setenv CONTROL_FILE   02_cutadapt_cmds.cmds
 setenv WORKDIR        /scratch/02189/rmharris/SingleNeuronSeq/JA16268/2016-05-24-raw-reads
+
 # 
 # Variable description:
 #

@@ -13,12 +13,12 @@
 # 
 #         <------ Setup Parameters ------>
 #
-#SBATCH -J kallistolauncher     # Job name
+#SBATCH -J kallistopseudo     # Job name
 #SBATCH -n 8                   # Total number of tasks
 #SBATCH -p normal              # Queue name
 #SBATCH -t 2:00:00             # Run time (hh:mm:ss)
-#SBATCH -o kallistoquant.%j.out
-#SBATCH -e kallistoquant.%j.e
+#SBATCH -o kallistopseudo.%j.out
+#SBATCH -e kallistopseudo.%j.e
 #SBATCH --mail-user rayna.harris@utexas.edu     
 #SBATCH --mail-type END # when to notify email
 #SBATCH -A NeuroEthoEvoDevo    # sets the allocation if you have mutiple to chose from
@@ -26,7 +26,7 @@
 
 module load launcher
 setenv EXECUTABLE     $TACC_LAUNCHER_DIR/init_launcher 
-setenv CONTROL_FILE   05_kallistoquant_Cborealis_cds.cmds
+setenv CONTROL_FILE   05_kallistopseudo_Cborealis_transcriptome.cmds
 setenv WORKDIR     	/scratch/02189/rmharris/SingleNeuronSeq/JA16268/2016-05-24-trimmedreads
 # 
 # Variable description:
