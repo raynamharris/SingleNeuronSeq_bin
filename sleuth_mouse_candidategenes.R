@@ -1,39 +1,39 @@
 #Sleuth from https://rawgit.com/pachterlab/sleuth/master/inst/doc/intro.html
 
-#source("http://bioconductor.org/biocLite.R")
-#biocLite("rhdf5")
-#biocLite("biomaRt")
-#install.packages('devtools')
-#devtools::install_github('pachterlab/sleuth')
+source("http://bioconductor.org/biocLite.R")
+biocLite("rhdf5")
+biocLite("biomaRt")
+install.packages('devtools')
+devtools::install_github('pachterlab/sleuth')
 library("sleuth")
 
 setwd("~/Github/SingleNeuronSeq/data")
 base_dir <- "~/Github/SingleNeuronSeq/data"
-sample_id <- dir(file.path(base_dir,"2016-06-02-05-Cborealis-transcriptome-kallisto"))
+sample_id <- dir(file.path(base_dir,"2016-06-07-05-MusUCSD-candidategenes"))
 sample_id
-kal_dirs <- sapply(sample_id, function(id) file.path(base_dir, "2016-06-02-05-Cborealis-transcriptome-kallisto", id))
+kal_dirs <- sapply(sample_id, function(id) file.path(base_dir, "2016-06-07-05-MusUCSD-candidategenes", id))
 kal_dirs
 
-s2c <- read.csv('Cborealissampleinfo.csv', header = TRUE, stringsAsFactors=FALSE)
+s2c <- read.csv("Mousesampleinfo.csv", sep=",", header = TRUE, stringsAsFactors=FALSE)
 s2c <- dplyr::select(s2c, sample = id, type, singledouble)
 s2c
 
 s2c <- dplyr::mutate(s2c, path = kal_dirs)
 print(s2c)
 
-
+## looking at just the tissue dilution samples
 
 ## Now the “sleuth object” can be constructed. 
 ## This requires three commands that 
 ## (1) load the kallisto processed data into the object 
 ## (2) estimate parameters for the sleuth response error measurement model and 
 ## (3) perform differential analysis (testing). On a laptop the three steps should take about 2 minutes altogether.
-so <- sleuth_prep(s2c, ~  type)
+so <- sleuth_prep(s2c, ~  singledouble)
 so <- sleuth_fit(so)
 so <- sleuth_wt(so, 'typePD') 
 models(so)
 sleuth_live(so)
-results_table <- sleuth_results(so, 'condition')
+results_table <- sleuth_results(so, 'type')
 
 
 ## plotting densities by group

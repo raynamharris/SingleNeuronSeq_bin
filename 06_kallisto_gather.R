@@ -9,7 +9,7 @@
 ## if on local, wd is 
 setwd("~/Github/SingleNeuronSeq/data/2016-06-03-05-Cborealis-cds-kallisto")
 ## this will create lists of all the samples
-kallistoDirs = dir("~/Github/SingleNeuronSeq/data/2016-06-02-05-Cborealis-cds-kallisto")
+kallistoDirs = dir("~/Github/SingleNeuronSeq/data/2016-06-03-05-Cborealis-cds-kallisto")
 kallistoDirs = kallistoDirs[!grepl("\\.(R|py|pl|sh|xlsx?|txt|tsv|csv|org|md|obo|png|jpg|pdf)$",
         kallistoDirs, ignore.case=TRUE)]
 
