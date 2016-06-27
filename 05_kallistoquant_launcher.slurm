@@ -13,12 +13,12 @@
 # 
 #         <------ Setup Parameters ------>
 #
-#SBATCH -J kallistolauncher     # Job name
-#SBATCH -n 8                   # Total number of tasks
-#SBATCH -p normal              # Queue name
-#SBATCH -t 2:00:00             # Run time (hh:mm:ss)
+#SBATCH -J kallistoquant     # Job name
 #SBATCH -o kallistoquant.%j.out
 #SBATCH -e kallistoquant.%j.e
+#SBATCH -n 34                   # Total number of tasks
+#SBATCH -p normal              # Queue name
+#SBATCH -t 4:00:00             # Run time (hh:mm:ss)
 #SBATCH --mail-user rayna.harris@utexas.edu     
 #SBATCH --mail-type END # when to notify email
 #SBATCH -A NeuroEthoEvoDevo    # sets the allocation if you have mutiple to chose from
@@ -26,8 +26,9 @@
 
 module load launcher
 setenv EXECUTABLE     $TACC_LAUNCHER_DIR/init_launcher 
-setenv CONTROL_FILE   05_kallistoquant_Cborealis_cds.cmds
-setenv WORKDIR     	/scratch/02189/rmharris/SingleNeuronSeq/JA16268/2016-05-24-trimmedreads
+setenv CONTROL_FILE   2016-06-27-kallistoquant.cmds
+setenv WORKDIR     	/work/02189/rmharris/IntMolModule/STG/data/2016-06-27-JA16393/
+
 # 
 # Variable description:
 #
@@ -88,5 +89,12 @@ module load kallisto
 $TACC_LAUNCHER_DIR/paramrun $EXECUTABLE $CONTROL_FILE
 
 echo " "
-echo " 05_kallisto_launcher.slurm Job Complete"
+echo " 05_kallistoquant Job Complete"
 echo " "
+
+
+mv 2016-06-27-kallistoquant.cmds /scratch/02189/rmharris/SingleNeuronSeq/results/JA16393/2016-06-27-kallistoquant
+
+mv *.out /scratch/02189/rmharris/SingleNeuronSeq/results/JA16393/2016-06-27-kallistoquant
+mv *.e /scratch/02189/rmharris/SingleNeuronSeq/results/JA16393/2016-06-27-kallistoquant
+
