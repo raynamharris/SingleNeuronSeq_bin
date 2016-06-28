@@ -26,7 +26,7 @@
 
 module load launcher
 setenv EXECUTABLE     $TACC_LAUNCHER_DIR/init_launcher 
-setenv CONTROL_FILE   2016-06-27-kallistoquant.cmds
+setenv CONTROL_FILE   2016-06-27-kallistoquant-cds.cmds
 setenv WORKDIR     	/work/02189/rmharris/IntMolModule/STG/data/2016-06-27-JA16393/
 
 # 
@@ -93,8 +93,8 @@ echo " 05_kallistoquant Job Complete"
 echo " "
 
 
-mv 2016-06-27-kallistoquant.cmds /scratch/02189/rmharris/SingleNeuronSeq/results/JA16393/2016-06-27-kallistoquant
+mv 2016-06-27-kallistoquant-cds.cmds /scratch/02189/rmharris/SingleNeuronSeq/results/JA16393/2016-06-27-kallistoquant-cds
 
-mv *.out /scratch/02189/rmharris/SingleNeuronSeq/results/JA16393/2016-06-27-kallistoquant
-mv *.e /scratch/02189/rmharris/SingleNeuronSeq/results/JA16393/2016-06-27-kallistoquant
+mv /work/02189/rmharris/SingleNeuronSeq/bin/*.out /scratch/02189/rmharris/SingleNeuronSeq/results/JA16393/2016-06-27-kallistoquant-cds
+mv /work/02189/rmharris/SingleNeuronSeq/bin/*.e /scratch/02189/rmharris/SingleNeuronSeq/results/JA16393/2016-06-27-kallistoquant-cds
 

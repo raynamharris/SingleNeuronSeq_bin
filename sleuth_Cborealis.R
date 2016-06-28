@@ -9,18 +9,35 @@ library("sleuth")
 
 setwd("~/Github/SingleNeuronSeq/data")
 base_dir <- "~/Github/SingleNeuronSeq/data"
-sample_id <- dir(file.path(base_dir,"2016-06-02-05-Cborealis-transcriptome-kallisto"))
+sample_id <- dir(file.path(base_dir,"2016-06-27-kallistoquant"))
 sample_id
-kal_dirs <- sapply(sample_id, function(id) file.path(base_dir, "2016-06-02-05-Cborealis-transcriptome-kallisto", id))
+kal_dirs <- sapply(sample_id, function(id) file.path(base_dir, "2016-06-27-kallistoquant", id))
 kal_dirs
 
-s2c <- read.csv('Cborealissampleinfo.csv', header = TRUE, stringsAsFactors=FALSE)
-s2c <- dplyr::select(s2c, sample = id, type, singledouble)
+s2c <- read.csv('Cborealissampleinfo-JA16393.csv', header = TRUE, stringsAsFactors=FALSE)
 s2c
 
 s2c <- dplyr::mutate(s2c, path = kal_dirs)
 print(s2c)
 
+# not all samples produced an output. 
+# I used this filter to remove samples for which there was no output
+s2c <- filter(s2c, sample != "GM-27-S_S34")
+s2c <- filter(s2c, sample != "GM-30-S_S18")
+s2c <- filter(s2c, sample != "GM-37-S_S22")
+s2c <- filter(s2c, sample != "GM-38-S_S23")
+s2c <- filter(s2c, sample != "GM-37-S_S22")
+s2c <- filter(s2c, sample != "GM-39-S_S24")
+s2c <- filter(s2c, sample != "LP-01-S_S1")
+s2c <- filter(s2c, sample != "LP-02-S_S2")
+s2c <- filter(s2c, sample != "LP-03-S_S3")
+s2c <- filter(s2c, sample != "LP-04-S_S4")
+s2c <- filter(s2c, sample != "LP-06-S_S5")
+s2c <- filter(s2c, sample != "PD-14-S_S11")
+s2c <- filter(s2c, sample != "PD-23-S_S15")
+s2c <- filter(s2c, sample != "VD-58-S_S32")
+s2c <- filter(s2c, sample != "GM-27-S_S34")
+s2c <- filter(s2c, sample != "GM-29-S_S17")
 
 
 ## Now the “sleuth object” can be constructed. 
