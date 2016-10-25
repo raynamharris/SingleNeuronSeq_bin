@@ -16,7 +16,7 @@
 #SBATCH -J kallistoquant     # Job name
 #SBATCH -o kallistoquant.%j.out
 #SBATCH -e kallistoquant.%j.e
-#SBATCH -n 34                   # Total number of tasks
+#SBATCH -n 34                  # Total number of tasks
 #SBATCH -p normal              # Queue name
 #SBATCH -t 4:00:00             # Run time (hh:mm:ss)
 #SBATCH --mail-user rayna.harris@utexas.edu     
