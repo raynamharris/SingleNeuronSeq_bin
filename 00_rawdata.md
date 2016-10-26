@@ -192,4 +192,4 @@ Now, copy the data from corral with the `scp` command. Th.e last period meas "co
 scp -r <username>@corral.utexas.edu:/corral-tacc/utexas/NeuroEthoEvoDevo$RNAseqProject/$RNAseqJob/00_rawdata .
 ~~~
 
-To repeat for more directories, modify the RNAseqJob variable.
+To repeat for more directories, modify the RNAseqJob variable and execute again.
