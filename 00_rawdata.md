@@ -1,4 +1,4 @@
-# 00_rawdata
+# Get, Store, and/or Retrieve Raw Data
 
 Includes the process and commands needed to:
 * download the data to scratch on Stampede with `00_gsaf_download`
