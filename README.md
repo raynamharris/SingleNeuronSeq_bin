@@ -13,15 +13,19 @@ The data for this project were processed as part of two sequencing runs.
 JA15597 | May 24, 2016 | NextSeq 500, PE 2x150 |21 samples: serial dilutions of neurons & tissues, controls |
 JA16033 | Jan 18, 2016 | NextSeq 500, PE 2x75 |17 samples: single neurons, pooled neurons, tissue samples, controls |
 
+## The pipeline
+* **00_rawdata:** Download the data to scratch on Stampede with `00_gsaf_download` and save a copy on Corrall with `00_storeoncorral`  
 
-## 00_gsaf_download
+
+
+## 00_gsaf_download and 00_storeoncorral
 
 The first step in the bioinformatics pipeline is to download the data. To do so, I:
-1. Setup project directories:* I created a "SingleNeuronSeq" project directory in the WORK file system on Stampede at TACC and created subdirectory for each job "JA15597" and "JA16033"
-2. Copy script to download data: Save a script to download the data (called "00_gsaf_download.sh") in each subdirector. 
-3. Download the data using TACC: For this three-part step I created a commands file (called "00_gsaf_download.cmd") with the command to execute the download script,  created a launcher script to execute the commands file to execute the launcher script (I know, sounds like a lot of steps, but this is so I use TACC's compute power not my own), and launched the job on TACC.
-4. Repeat steps 2 and 3 for all RNAseq jobs: Repeat. 
-5. Long-term storage: Copied the data to Corral for long-term storage (which gives users the ability to copy the data to their own WORK directory
+1. Setup project directories:* I created a "SingleNeuronSeq" project directory in the WORK file system on Stampede at TACC and created subdirectory for each job "JA15597" and "JA16033"  
+2. Copy script to download data: Save a script to download the data (called "00_gsaf_download.sh") in each subdirector  
+3. Download the data using TACC: For this three-part step I created a commands file (called "00_gsaf_download.cmd") with the command to execute the download script,  created a launcher script to execute the commands file to execute the launcher script (I know, sounds like a lot of steps, but this is so I use TACC's compute power not my own), and launched the job on TACC  
+4. Repeat steps 2 and 3 for all RNAseq jobs: Repeat  
+5. Long-term storage: Copied the data to Corral for long-term storage (which gives users the ability to copy the data to their own WORK directory  
 
 ### Setup project directories 
 
@@ -103,16 +107,38 @@ cd $SCRATCH/SingleNeuronSeq/JA15597/00_rawdata
 for file in *.fastq.gz
 do
 echo $file
-cp $file /corral-tacc/utexas/NeuroEthoEvoDevo/SingleNeuronSeq >> 00_storeoncorral.cmds
+echo "cp $file /corral-tacc/utexas/NeuroEthoEvoDevo/SingleNeuronSeq/JA15597/00_rawdata" >> 00_storeoncorral.cmds
 done
 ~~~
 
 **In the third step**, I'll create and launch a launcher script `00_storeonecorral.slurm` that copies the data to corral. 
 
 ~~~ {.bash}
-launcher_creator.py -t 12:00:00 -n 00_storeoncorral -j 00_storeoncorral.cmds -l 00_storeoncorral.slurm -A NeuroEthoEvoDevo -q normal
+launcher_creator.py -t 01:00:00 -n 00_storeoncorral -j 00_storeoncorral.cmds -l 00_storeoncorral.slurm -A NeuroEthoEvoDevo -q normal
 sbatch 00_storeoncorral.slurm
 ~~~ 
+
+**In the first step,** I'll create the directories on coral where the data will be stored. In a new terminal window, login to Coral, navigate to the Hofmann lab repository, and create repos to store the raw data. 
+
+Repeat for 
+
+**In the second step**, I return to my scratch directory and use a for loop to create a commands file `00_storeoncorral.cmds` that will copy each read (*.fastq.gz) to corral. 
+
+~~~ {.bash}
+cd $SCRATCH/SingleNeuronSeq/JA16033/00_rawdata
+for file in *.fastq.gz
+do
+echo $file
+echo "cp $file /corral-tacc/utexas/NeuroEthoEvoDevo/SingleNeuronSeq/JA16033/00_rawdata" >> 00_storeoncorral.cmds
+done
+~~~
+
+**In the third step**, I'll create and launch a launcher script `00_storeonecorral.slurm` that copies the data to corral. 
+
+~~~ {.bash}
+launcher_creator.py -t 01:00:00 -n 00_storeoncorral -j 00_storeoncorral.cmds -l 00_storeoncorral.slurm -A NeuroEthoEvoDevo -q normal
+sbatch 00_storeoncorral.slurm
+~~~
 
 
 
