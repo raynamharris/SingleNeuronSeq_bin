@@ -1,61 +1,89 @@
-# SingleNeuronSeq
-Rayna M Harris  
-Last edited March 2, 2016
+# RNAseq Pipeline for analysis of a Single Neuron Project
+By Rayna M Harris with Cherish Taylor
+October 25, 2016
 
-This git repository contains only the scripts used for read processing and analysis of one of my these projects. The data and results are stored elsewhere. 
+## Project Design
+All data data in this directory is from a collaboration with Boris Zemelman and the Genomic Sequencing and Analysis Facility. I will add the details later
 
-To keep track of when I did things, I implemented a **naming system**. All scripts start with a number (i.e. 01 or 05) to indicate where in the pipeline they occur. The output directories also start with this same number and end with the date.
+## The data
+The data for this project were processed as part of two sequencing runs.
 
-For this particular project, I sequenced 56 samples, so I had to write a lot of for loops and learn how to launch many jobs at once. I came up with a **three-step solution to pseudo-parallelize** the processing of all my samples rather than one sample at a time. I think it keeps things nice and orderly.
-
- Below is the workflow that worked for me with a breif(ish) description. 
-
-## Read Processing
-
-#### 1. Download raw data from the cloud
-	01_gsaf_download.sh
-
-The [Genomic Sequencing Analysis Facility (GSAF)](https://wikis.utexas.edu/display/GSAF/Home+Page) uses Amazon Web Services to deliver sequencing. Documentation for downloading data can be found [here](https://wikis.utexas.edu/display/GSAF/How+to+download+your+data).
-
-### 2. Trim adapters with Cutadapt
-	02_trimreads.slurm
-
-Documentation for Cutadapt can be found [here](https://cutadapt.readthedocs.org/en/stable/guide.html#basic-usage). I also use some parameders as recommened by my colleague, Dhivya Arrassapan, in this [Intro to RNA-seq course](http://ccbb.biosci.utexas.edu/summerschool.html). I learned how to write these forloops with basename from Titus Brown [here](https://github.com/ngs-docs/2016-adv-begin-shell-genomics).
-
-### 3. Quality filter reads with Fastx Toolkit
-	03_qualityfilter_cmds.sh   
-	03_qualityfilter_launcher.sbatch 
-	03_qualityfilter_launcher_cleanup.sh 
-
-To submit a job to filter the reads for all my samples at the same time, I came up with this approach. The order of opperations is as follows:   
-
-1. `03_qualityfilter_cmds.sh` loops through the trimmed read directory and creates a fastq_quality_filter command file `03_qualityfilter_cmds.cmds` with a fastq_quality_filter command for every read that in that directory. The output command file is saved in the directory with all the reads. 
-
-2. `03_qualityfilter_launcher.sbatch` was created by modifying TACC's `launcher_creator.sbatch` script. The modifications include: adjusting the number of tasks, job allocation, time, and email; adding the path to the working directory with files and the directory with the genome and gene annotation files; adding the modules that need to be loaded.
-
-3. `03_qualityfilter_launcher_cleanup.sh` is a script that moves all the newly-created filtered read files and the job output files to the new directory with the results results.
-
-Documentation for Fastx Quality Filter can be found [here](http://hannonlab.cshl.edu/fastx_toolkit/commandline.html#fastq_quality_filter_usage). I set some parameters based on suggestions by colleagues [here](https://wikis.utexas.edu/display/bioiteam/FASTQ+Manipulation+Tools).
+| RNAseq Job | Data | Job Info | No. Samples |
+| :--- | :---: | :---: | :--- |
+JA15597 | May 24, 2016 | NextSeq 500, PE 2x150 |21 samples: serial dilutions of neurons & tissues, controls |
+JA16033 | Jan 18, 2016 | NextSeq 500, PE 2x75 |17 samples: single neurons, pooled neurons, tissue samples, controls |
 
 
-## Mapping and Counting Reads with the Tuxedo Suite  
+## 00_gsaf_download
 
-### 4. Downloading the Mouse Botwie Index
-	04_bowtie_index.slurm
+The first step in the bioinformatics pipeline is to download the data. To do so, I:
+1. **Setup project directories:** I created a "SingleNeuronSeq" project directory in the WORK file system on Stampede at TACC and created subdirectory for each job "JA15597" and "JA16033"
+2. **Copy script to download data:** Save a script to download the data (called "00_gsaf_download.sh") in each subdirector. 
+3. **Download the data using TACC:** For this three-part step I created a commands file (called "00_gsaf_download.cmd") with the command to execute the download script,  created a launcher script to execute the commands file to execute the launcher script (I know, sounds like a lot of steps, but this is so I use TACC's compute power not my own), and launched the job on TACC.
+4. **Repeat steps 2 and 3 for all RNAseq jobs**. Repeat. 
+5. **Long-term storage:**Copied the data to Corral for long-term storage (which gives users the ability to copy the data to their own WORK directory
 
-The Tuxedo website provides links to a bunch of Illumina genomes [here](https://ccb.jhu.edu/software/tophat/igenomes.shtml). For this project I downloaded both the mouse genome and bowtie indexes from USCD mm10.  
+### Setup project directories 
 
-### 5. Mapping with TopHat
-	05_tophat_cmds.sh.sh
-	05_tophat_launcher.slurm
-	05_tophat_launcher_cleanup.sh
+Login to TACC using ssh with your password and authentication credentials. Replace "<username>" with your TACC user name. 
 
-### 6. Mapping with TopHat
-	06_samtools_cmds.sh.sh
-	06_samtools_launcher.slurm
-	06_samtools_launcher_cleanup.sh
+~~~ {.bash}
+ssh <username>@stampede.tacc.utexas.edu
+~~~
 
-Samtools has utilities for parsing and manipulating alignment files in SAM and BAM formats.  It is useful for sorting alignments, merging multiple alignments, coverting between SAM and BAM formats, retrieving reads with specific criterion, and collecting statistics about mapping results. 
+On scrate, create the project directory (SingleNeuronSeq), with a subdirectory for each job (in this case JA15597 and JA16033) and subsubdirectory called 00_rawdata. The argument `-p` will create the parent and subdirectories if they do not already exist.
+
+~~~ {.bash}
+mkdir -p $SCRATCH/SingleNeuronSeq/JA15597/00_rawdata
+mkdir -p $SCRATCH/SingleNeuronSeq/JA16033/00_rawdata
+~~~
+
+### Copy script to download data 
+
+Copy the gsaf download script found here:  https://wikis.utexas.edu/display/GSAF/How+to+download+your+data 
+
+Navigate to one of the subjectories. Let's start with JA15597. Use the program nano to open a text file.  I use the program nano to open a new text file. Paste the script and save it as `00_gsaf_download.sh`.
+
+~~~ {.bash}
+cd $SCRATCH/SingleNeuronSeq/JA15597/00_rawdata
+nano
+~~~ 
+
+Now, you should have one file called `00_gsaf_download.sh`. Check with `ls`
+
+~~~ {.bash}
+ls
+~~~ 
+
+### Download the data using TACC
+Technically, you can download the data with one command using your own comptuer's compute power, but I prefer to have TACC do it. So, instead of type the command which will do just that in the command line, I will save it to a script, like so. (Note: the webaddress provided was sent by secure email to the person who submitted the samples to GSAF). Then, you must make the bash script executable with `chmod`.
+
+~~~ {.bash}
+echo '00_gsaf_download.sh "http://gsaf.s3.amazonaws.com/JA15597.SA15231.html?AWSAccessKeyId=AKIAIVYXWYWNPBNEDIAQ&Expires=1478303430&Signature=yFqA%2FQ54MsBIfp%2Fuv1RbMewBulU%3D" ' > 00_gsaf_download.cmds
+chmod a+x 00_gsaf_download.sh
+~~~
+
+Now, I use `launcher_creator.py` to create a launcher script that will tell how to launch this job on TACC. The arguments are defined clearly on this website: https://wikis.utexas.edu/display/bioiteam/launcher_creator.py. Then I will use `sbatch 00_gsaf_download.slurm` to launch the job.
+
+~~~ {.bash}
+launcher_creator.py -t 2:00:00 -n 00_gsaf_download -j 00_gsaf_download.cmds -l 00_gsaf_download.slurm -A NeuroEthoEvoDevo
+sbatch 00_gsaf_download.slurm
+~~~
+
+### Repeat for all jobs. 
+The great thing about using TACC for this is that you can go about doing other things while the files are download. Let's repeat the two above steps for job JA16033. 
+
+However, we are going to make two changes:
+1. this time let's copy the 00_gsaf_download.sh from out sister directory rather than creating it fresh from scratch using the `cp` command.
+2. We need to use a different cluster (the "normal" cluster rather than the default "development" cluster , so we will modify the launcher command `-q normal`.
+
+~~~ {.bash}
+cd $SCRATCH/SingleNeuronSeq/JA16033/00_rawdata
+cp $SCRATCH/SingleNeuronSeq/JA15597/00_rawdata/00_gsaf_download.sh .
+echo '00_gsaf_download.sh "http://gsaf.s3.amazonaws.com/JA16033.SA16020.html?AWSAccessKeyId=AKIAIVYXWYWNPBNEDIAQ&Expires=1478300951&Signature=ThvGlG6pvx9rzMxXCNmFyjhSYkw%3D" ' > 00_gsaf_download.cmds
+launcher_creator.py -t 2:00:00 -n 00_gsaf_download -j 00_gsaf_download.cmds -l 00_gsaf_download.slurm -A NeuroEthoEvoDevo -q normal
+sbatch 00_gsaf_download.slurm
+~~~ 
 
 
 
@@ -67,43 +95,3 @@ Samtools has utilities for parsing and manipulating alignment files in SAM and B
 
 
 
-## Mapping and Counting Reads with Kallisto
-
-### 4. Creating the Kallisto Index from a Mouse genome
-	04_kallisto.index.slurm
-
-### 5.  Pseudomapping reads with Kallisto
-	05_kallistoquant_cmds.sh
-	05_kallistoquant_launcher.slurm
-	05_kallistoquant_launcher_cleanup.sh
-	
-1. `05_kallistoquant_cmds.sh` loops through the proccessed reads directory and creates a kallisto quant command file `05_kallistoquant_cmds.cmds` for each read pair. The command for each pair looks like `kallisto quant -i index -o output Read1.fastq.gz Read2.fastq.gz`. 
-
-2. `05_kallistoquant_launcher.sbatch` gives Stampede all the necessary details to execute kallisto. Kallisto is only available on Stampede because it is install in someone's public profile there. The command `module use /work/03439/wallen/public/modulefiles` must proceed `module load kallisto` to source the program. Kallisto is super fast! The only downfall I see is that you don't get the intermediate files to view how the reads map, instead the only output is the counts.	
-
-3. `05_kallistoquant_launcher.sh` moves the job output files into the directory with the output.	
-	
-### 6. Gathering all the data from separate .tsv files into 1 dataframe
-	06_kallisto_gather.R
-Kallisto outputs three files for every sample into their own sub directories. The `abundance.tsv` file has the count data in terms of raw counts and transcripts per million. My colleague Dennis Wylie wrote this script to "gather" the results from the abuntance.tsv files into an R dataframe.
-
-
-___
-
-Still working on improving these!
-
-
-### 7. 	Kallisto Data Wrangling
-	07_dplyrmutate.R
-I wanted to play around with the raw counts for a while before importing into DESeq. I called it dplyrmutate because the main thing this script does is subtract maximumum number of reads of the negative control samples from the number of reads from the real samples. 
-
-### 8. 	ERCC Analysis
-	08_ERCC_counts.R
-We spiked in ERCCs into our samples before sequencing. This script analyses the ERCC counts for all the samples. 
-
-### 9.  Quanitfying Gene expression
-	09_DESeq.R
-	
-## Other Stuff
-I downloaded `launcher.slurm` from TACC. For more info on TACC's launcher program, type 	`module spider launcher` on Stamped or Lonestar 5 and/or visit [this page](https://www.tacc.utexas.edu/research-development/tacc-software/the-launcher)
-	
