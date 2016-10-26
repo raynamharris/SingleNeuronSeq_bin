@@ -14,9 +14,7 @@ JA15597 | May 24, 2016 | NextSeq 500, PE 2x150 |21 samples: serial dilutions of 
 JA16033 | Jan 18, 2016 | NextSeq 500, PE 2x75 |17 samples: single neurons, pooled neurons, tissue samples, controls |
 
 ## The pipeline
-* **00_rawdata:** Download the data to scratch on Stampede with `00_gsaf_download` and save a copy on Corrall with `00_storeoncorral`  
-
-
+* **00_rawdata:** Download the data to scratch on Stampede with `00_gsaf_download` and save a copy on Corral with `00_storeoncorral`  
 
 ## 00_gsaf_download and 00_storeoncorral
 
@@ -27,7 +25,7 @@ The first step in the bioinformatics pipeline is to download the data. To do so,
 4. Repeat steps 2 and 3 for all RNAseq jobs: Repeat  
 5. Long-term storage: Copied the data to Corral for long-term storage (which gives users the ability to copy the data to their own WORK directory  
 
-### Setup project directories 
+### Setup project and RNAseq job directories 
 
 Login to TACC using ssh with your password and authentication credentials. Replace "<username>" with your TACC user name. 
 
@@ -35,21 +33,29 @@ Login to TACC using ssh with your password and authentication credentials. Repla
 ssh <username>@stampede.tacc.utexas.edu
 ~~~
 
-On scrate, create the project directory (SingleNeuronSeq), with a subdirectory for each job (in this case JA15597 and JA16033) and subsubdirectory called 00_rawdata. The argument `-p` will create the parent and subdirectories if they do not already exist.
+Raw data from separate jobs need to be processed as separate jobs. Later, the read counts can be combined, but original processing must be done by job. So, let's create a an environment variable called `RNAseqJob` so that the scripts can easily be co-opted for each new RNAseq job. 
 
 ~~~ {.bash}
-mkdir -p $SCRATCH/SingleNeuronSeq/JA15597/00_rawdata
-mkdir -p $SCRATCH/SingleNeuronSeq/JA16033/00_rawdata
+## set the enviornment variables 
+RNAseqProject=SingleNeuronSeq
+RNAseqJob=JA16033
+~~~
+
+On scratch, create the project directory (SingleNeuronSeq), with a subdirectory for each job (in this case JA15597 and JA16033) and subsubdirectory called 00_rawdata. The argument `-p` will create the parent and subdirectories if they do not already exist.
+
+
+~~~ {.bash}
+mkdir -p $SCRATCH/$RNAseqProject/$RNAseqJob/00_rawdata
 ~~~
 
 ### Copy script to download data 
 
 Copy the gsaf download script found here:  https://wikis.utexas.edu/display/GSAF/How+to+download+your+data 
 
-Navigate to one of the subjectories. Let's start with JA15597. Use the program nano to open a text file.  I use the program nano to open a new text file. Paste the script and save it as `00_gsaf_download.sh`.
+Navigate to one of the subjectories. Use the program nano to open a text file.  I use the program nano to open a new text file. Paste the script and save it as `00_gsaf_download.sh`.
 
 ~~~ {.bash}
-cd $SCRATCH/SingleNeuronSeq/JA15597/00_rawdata
+cd $SCRATCH/$RNAseqProject/$RNAseqJob/00_rawdata
 nano
 ~~~ 
 
@@ -75,17 +81,9 @@ sbatch 00_gsaf_download.slurm
 ~~~
 
 ### Repeat for all jobs. 
-The great thing about using TACC for this is that you can go about doing other things while the files are download. Let's repeat the two above steps for job JA16033. 
+The great thing about using TACC for this is that you can go about doing other things while the files are download. Change the environment variable above `RNAseqJob` to repeat for other jobs.
 
-However, I'm going to make one change. This time let's copy the 00_gsaf_download.sh from out sister directory rather than creating it fresh from scratch using the `cp` command.
-
-~~~ {.bash}
-cd $SCRATCH/SingleNeuronSeq/JA16033/00_rawdata
-cp $SCRATCH/SingleNeuronSeq/JA15597/00_rawdata/00_gsaf_download.sh .
-echo '00_gsaf_download.sh "http://gsaf.s3.amazonaws.com/JA16033.SA16020.html?AWSAccessKeyId=AKIAIVYXWYWNPBNEDIAQ&Expires=1478300951&Signature=ThvGlG6pvx9rzMxXCNmFyjhSYkw%3D" ' > 00_gsaf_download.cmds
-launcher_creator.py -t 12:00:00 -n 00_gsaf_download -j 00_gsaf_download.cmds -l 00_gsaf_download.slurm -A NeuroEthoEvoDevo -q normal
-sbatch 00_gsaf_download.slurm
-~~~ 
+ 
 
 ### Save to Coral for long term storage
 
@@ -94,10 +92,16 @@ This will be a three-step process.
 **In the first step,** I'll create the directories on coral where the data will be stored. In a new terminal window, login to Coral, navigate to the Hofmann lab repository, and create repos to store the raw data. 
 
 ~~~ {.bash}
+## set the enviornment variables 
+RNAseqProject=SingleNeuronSeq
+RNAseqJob=JA0000
+~~~
+
+~~~ {.bash}
 ssh <username>@corral.tacc.utexas.edu
 cd /corral-tacc/utexas/NeuroEthoEvoDevo
-mkdir -p SingleNeuronSeq/JA15597/00_rawdata
-mkdir -p SingleNeuronSeq/JA16033/00_rawdata
+mkdir -p $RNAseqProject/$RNAseqJob/00_rawdata
+mkdir -p $RNAseqProject/$RNAseqJob/00_rawdata
 ~~~ 
 
 **In the second step**, I return to my scratch directory and use a for loop to create a commands file `00_storeoncorral.cmds` that will copy each read (*.fastq.gz) to corral. 
@@ -107,7 +111,7 @@ cd $SCRATCH/SingleNeuronSeq/JA15597/00_rawdata
 for file in *.fastq.gz
 do
 echo $file
-echo "cp $file /corral-tacc/utexas/NeuroEthoEvoDevo/SingleNeuronSeq/JA15597/00_rawdata" >> 00_storeoncorral.cmds
+echo "cp $file /corral-tacc/utexas/NeuroEthoEvoDevo/$RNAseqProject/$RNAseqJob/00_rawdata" >> 00_storeoncorral.cmds
 done
 ~~~
 
@@ -118,27 +122,7 @@ launcher_creator.py -t 01:00:00 -n 00_storeoncorral -j 00_storeoncorral.cmds -l 
 sbatch 00_storeoncorral.slurm
 ~~~ 
 
-**In the first step,** I'll create the directories on coral where the data will be stored. In a new terminal window, login to Coral, navigate to the Hofmann lab repository, and create repos to store the raw data. 
 
-Repeat for 
-
-**In the second step**, I return to my scratch directory and use a for loop to create a commands file `00_storeoncorral.cmds` that will copy each read (*.fastq.gz) to corral. 
-
-~~~ {.bash}
-cd $SCRATCH/SingleNeuronSeq/JA16033/00_rawdata
-for file in *.fastq.gz
-do
-echo $file
-echo "cp $file /corral-tacc/utexas/NeuroEthoEvoDevo/SingleNeuronSeq/JA16033/00_rawdata" >> 00_storeoncorral.cmds
-done
-~~~
-
-**In the third step**, I'll create and launch a launcher script `00_storeonecorral.slurm` that copies the data to corral. 
-
-~~~ {.bash}
-launcher_creator.py -t 01:00:00 -n 00_storeoncorral -j 00_storeoncorral.cmds -l 00_storeoncorral.slurm -A NeuroEthoEvoDevo -q normal
-sbatch 00_storeoncorral.slurm
-~~~
 
 
 
