@@ -1,4 +1,4 @@
-# 01_fastqc 
+# Fastqc: Quality Control Assessment of Raw Reads
 
 We must check the quality of our reads to see if we need to do any processing to improve the quality. We will use the function called `fastqc` (aka quality control of fastq files).
 
@@ -65,3 +65,8 @@ mkdir -p $RNAseqProject/$RNAseqJob
 cd $RNAseqProject/$RNAseqJob
 scp <username>@stampede.tacc.utexas.edu:$SCRATCH/$RNAseqProject/$RNAseqJob/01_fastqc/*html .
 ~~~
+
+## References
+FastQC: http://www.bioinformatics.babraham.ac.uk/projects/fastqc/
+BioITeam Launcher Creator: https://wikis.utexas.edu/display/bioiteam/launcher_creator.py
+FastQC Overview: https://wikis.utexas.edu/display/bioiteam/FASTQ+Quality+Assurance+Tools
