@@ -50,12 +50,20 @@ launcher_creator.py -t 4:00:00 -n 02_filtrimmedreads -j 02_filtrimmedreads.cmds 
 sbatch 02_trimreads.slurm
 ~~~
 
+Now, let's make our processed reads read only so we don't accidentally modify them. 
+
+~~~ {.bash}
+chmod a-w *filtrim.fastq.gz ../02_filtrimmedreads
+~~~
+
 Now, move the processed reads to a new file.
 
 ~~~ {.bash}
 mkdir ../02_filtrimmedreads
 mv *filtrim.fastq.gz ../02_filtrimmedreads
 ~~~
+
+
 
 ## References
 Cutadapt: http://cutadapt.readthedocs.io/en/stable/guide.html
