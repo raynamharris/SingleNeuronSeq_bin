@@ -164,8 +164,8 @@ Create a two environment variables for the project and the job. By setting varia
 
 ~~~ {.bash}
 ## set the enviornment variables 
-RNAseqProject=<nameofproject>
-RNAseqJob=<jobnumber>
+RNAseqProject=SingleNeuronSeq
+RNAseqJob=JA16033
 ~~~
 
 Now, make directories on scratch where the data can be stored. This utilizes the variable names we just created. The `-p` argument says create parent and sub directories, if necessary.  Then, navigate to the new directory
