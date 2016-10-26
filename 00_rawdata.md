@@ -178,7 +178,7 @@ cd $SCRATCH/$RNAseqProject/$RNAseqJob
 Now, copy the data from corral with the `scp` command. Th.e last period meas "copy here"
 
 ~~~ {.bash}
-scp -r <username>@login1.corral.utexas.edu:/corral-tacc/utexas/NeuroEthoEvoDevo$RNAseqProject/$RNAseqJob/00_rawdata .
+scp -r <username>@login1.corral.tacc.utexas.edu:/corral-tacc/utexas/NeuroEthoEvoDevo$RNAseqProject/$RNAseqJob/00_rawdata .
 ~~~
 
 To repeat for more directories, modify the RNAseqJob variable and execute again.
