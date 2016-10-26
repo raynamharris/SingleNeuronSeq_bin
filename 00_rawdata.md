@@ -141,23 +141,12 @@ RNAseqProject=SingleNeuronSeq
 RNAseqJob=JA16033
 ~~~
 
-Use a for loop to create a commands file `00_storeoncorral.cmds` that will copy each read (*.fastq.gz) to corral. 
+Copy the files to corral
 
 ~~~ {.bash}
 cd $SCRATCH/$RNAseqProject/$RNAseqJob/00_rawdata
-for file in *.fastq.gz
-do
-echo $file
-echo "cp $file /corral-tacc/utexas/NeuroEthoEvoDevo/$RNAseqProject/$RNAseqJob/00_rawdata" >> 00_storeoncorral.cmds
-done
+scp *.fastq.gz <username>@login1.corral.tacc.utexas.edu:/corral-tacc/utexas/NeuroEthoEvoDevo/$RNAseqProject/$RNAseqJob/00_rawdata
 ~~~
-
-Create and launch a launcher script `00_storeonecorral.slurm` that copies the data to corral. 
-
-~~~ {.bash}
-launcher_creator.py -t 01:00:00 -n 00_storeoncorral -j 00_storeoncorral.cmds -l 00_storeoncorral.slurm -A NeuroEthoEvoDevo -q normal
-sbatch 00_storeoncorral.slurm
-~~~ 
 
 Repeat for other datasets.
 
@@ -189,7 +178,7 @@ cd $SCRATCH/$RNAseqProject/$RNAseqJob
 Now, copy the data from corral with the `scp` command. Th.e last period meas "copy here"
 
 ~~~ {.bash}
-scp -r <username>@corral.utexas.edu:/corral-tacc/utexas/NeuroEthoEvoDevo$RNAseqProject/$RNAseqJob/00_rawdata .
+scp -r <username>@login1.corral.utexas.edu:/corral-tacc/utexas/NeuroEthoEvoDevo$RNAseqProject/$RNAseqJob/00_rawdata .
 ~~~
 
 To repeat for more directories, modify the RNAseqJob variable and execute again.
