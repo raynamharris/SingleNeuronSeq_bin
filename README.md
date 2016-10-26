@@ -66,25 +66,53 @@ chmod a+x 00_gsaf_download.sh
 Now, I use `launcher_creator.py` to create a launcher script that will tell how to launch this job on TACC. The arguments are defined clearly on this website: https://wikis.utexas.edu/display/bioiteam/launcher_creator.py. Then I will use `sbatch 00_gsaf_download.slurm` to launch the job.
 
 ~~~ {.bash}
-launcher_creator.py -t 2:00:00 -n 00_gsaf_download -j 00_gsaf_download.cmds -l 00_gsaf_download.slurm -A NeuroEthoEvoDevo
+launcher_creator.py -t 12:00:00 -n 00_gsaf_download -j 00_gsaf_download.cmds -l 00_gsaf_download.slurm -A NeuroEthoEvoDevo -q normal
 sbatch 00_gsaf_download.slurm
 ~~~
 
 ### Repeat for all jobs. 
 The great thing about using TACC for this is that you can go about doing other things while the files are download. Let's repeat the two above steps for job JA16033. 
 
-However, we are going to make two changes:
-1. this time let's copy the 00_gsaf_download.sh from out sister directory rather than creating it fresh from scratch using the `cp` command.
-2. We need to use a different cluster (the "normal" cluster rather than the default "development" cluster , so we will modify the launcher command `-q normal`.
+However, I'm going to make one change. This time let's copy the 00_gsaf_download.sh from out sister directory rather than creating it fresh from scratch using the `cp` command.
 
 ~~~ {.bash}
 cd $SCRATCH/SingleNeuronSeq/JA16033/00_rawdata
 cp $SCRATCH/SingleNeuronSeq/JA15597/00_rawdata/00_gsaf_download.sh .
 echo '00_gsaf_download.sh "http://gsaf.s3.amazonaws.com/JA16033.SA16020.html?AWSAccessKeyId=AKIAIVYXWYWNPBNEDIAQ&Expires=1478300951&Signature=ThvGlG6pvx9rzMxXCNmFyjhSYkw%3D" ' > 00_gsaf_download.cmds
-launcher_creator.py -t 2:00:00 -n 00_gsaf_download -j 00_gsaf_download.cmds -l 00_gsaf_download.slurm -A NeuroEthoEvoDevo -q normal
+launcher_creator.py -t 12:00:00 -n 00_gsaf_download -j 00_gsaf_download.cmds -l 00_gsaf_download.slurm -A NeuroEthoEvoDevo -q normal
 sbatch 00_gsaf_download.slurm
 ~~~ 
 
+### Save to Coral for long term storage
+
+This will be a three-step process. 
+
+**In the first step,** I'll create the directories on coral where the data will be stored. In a new terminal window, login to Coral, navigate to the Hofmann lab repository, and create repos to store the raw data. 
+
+~~~ {.bash}
+ssh <username>@corral.tacc.utexas.edu
+cd /corral-tacc/utexas/NeuroEthoEvoDevo
+mkdir -p SingleNeuronSeq/JA15597/00_rawdata
+mkdir -p SingleNeuronSeq/JA16033/00_rawdata
+~~~ 
+
+**In the second step**, I return to my scratch directory and use a for loop to create a commands file `00_storeoncorral.cmds` that will copy each read (*.fastq.gz) to corral. 
+
+~~~ {.bash}
+cd $SCRATCH/SingleNeuronSeq/JA15597/00_rawdata
+for file in *.fastq.gz
+do
+echo $file
+cp $file /corral-tacc/utexas/NeuroEthoEvoDevo/SingleNeuronSeq >> 00_storeoncorral.cmds
+done
+~~~
+
+**In the third step**, I'll create and launch a launcher script `00_storeonecorral.slurm` that copies the data to corral. 
+
+~~~ {.bash}
+launcher_creator.py -t 12:00:00 -n 00_storeoncorral -j 00_storeoncorral.cmds -l 00_storeoncorral.slurm -A NeuroEthoEvoDevo -q normal
+sbatch 00_storeoncorral.slurm
+~~~ 
 
 
 
