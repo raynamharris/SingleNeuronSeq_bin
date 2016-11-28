@@ -46,8 +46,8 @@ done
 Now, submit the job.
 
 ~~~ {.bash}
-launcher_creator.py -t 4:00:00 -n 02_filtrimmedreads -j 02_filtrimmedreads.cmds -l 02_filtrimmedreads.slurm -A NeuroEthoEvoDevo  
-sbatch 02_trimreads.slurm
+launcher_creator.py -t 4:00:00 -n 02_filtrimmedreads -j 02_filtrimmedreads.cmds -l 02_filtrimmedreads.slurm -A NeuroEthoEvoDevo -q 'normal'  
+sbatch 02_filtrimmedreads.slurm
 ~~~
 
 Now, let's make our processed reads read only so we don't accidentally modify them. 
