@@ -10,7 +10,7 @@ For each new project or new batch of samples, we can reset these variables and t
 ## set the enviornment variables 
 RNAseqProject=BehavEphyRNAseq
 RNAseqJob=JA16444
-~~~ {.bash}
+~~~ 
 
 ## Download a reference transcrtome
 
