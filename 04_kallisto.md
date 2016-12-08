@@ -2,11 +2,15 @@
 
 To quantify transcripts, we first need to have a reference genome or transciptome to which the reads can be mapped. 
 
-## Set Stampede enviornment  variables
+## Set Stampede environment  variables
 
+For each new project or new batch of samples, we can reset these variables and then all the code will work below, with out having to recode all the project specific file names.
+
+~~~ {.bash}
 ## set the enviornment variables 
 RNAseqProject=BehavEphyRNAseq
 RNAseqJob=JA16444
+~~~ {.bash}
 
 ## Download a reference transcrtome
 
