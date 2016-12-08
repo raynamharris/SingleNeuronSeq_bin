@@ -12,7 +12,7 @@ RNAseqProject=BehavEphyRNAseq
 RNAseqJob=JA16444
 ~~~ 
 
-## Download a reference transcrtome
+## Download a reference transcriptome
 
 Download mouse transcriptome from https://www.gencodegenes.org/mouse_releases/current.html
 
