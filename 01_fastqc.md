@@ -53,17 +53,55 @@ mv 01_fastqc.e* ../01_fastqc
 mv 01_fastqc.o* ../01_fastqc
 ~~~
 
-## save locallaly
+## Save locallaly to open .html files 
 
-One must save the data locally in order to view the html files. 
-
-In a new terminal window:
+To view the .html files, I like to save them them to my desk for easy opening. In a new terminal window:
 
 ~~~ {.bash}
 cd <pathtoplaceonyourpersonalpc>
 mkdir -p $RNAseqProject/$RNAseqJob
 cd $RNAseqProject/$RNAseqJob
 scp <username>@stampede.tacc.utexas.edu:$SCRATCH/$RNAseqProject/$RNAseqJob/01_fastqc/*html .
+~~~
+
+## Exploring the raw fastq data
+To view the text files from the fastq output, first unzip the zip file
+
+~~~ {.bash}
+# unzip all the fastqc files 
+for file in *.zip
+do
+unzip $file
+done
+~~~
+
+Then, clean up the directory for easy looping through subdirectories
+~~~ {.bash}
+mkdir html
+mv *.html html/
+mkdir zip
+mv *.zip zip/ 
+~~~
+
+Now, use a one-liner to extract the read lenght and read counts for each file
+
+~~~ {.bash}
+## get read lenght and count for each file
+for file in *R1*fastqc
+do
+echo $file
+cat $file/fastqc_data.txt | grep -w -A 1 "Length" | grep -v "Length"
+done
+~~~
+
+You can also save this output to a file that can be downloaded and imported into R or python for plotting and stats
+
+~~~ {.bash}
+## save read lenght and count to a new file
+for file in *R1*fastqc
+do
+cat $file/fastqc_data.txt | grep -w -A 1 "Length" | grep -v "Length" >> readcounts.txt
+done
 ~~~
 
 ## References
