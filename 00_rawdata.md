@@ -30,9 +30,9 @@ Raw data from separate jobs need to be processed as separate jobs. Later, the re
 
 ~~~ {.bash}
 ## set the enviornment variables 
-RNAseqProject=SingleNeuronSeq
-RNAseqJob=JA16033
-AmazonAddress="http://gsaf.s3.amazonaws.com/JA15597.SA15231.html?AWSAccessKeyId=AKIAIVYXWYWNPBNEDIAQ&Expires=1478303430&Signature=yFqA%2FQ54MsBIfp%2Fuv1RbMewBulU%3D"
+RNAseqProject=<name of project directory>
+RNAseqJob=<name of sequencing job>
+AmazonAddress=<"website to data key">
 ~~~
 
 On scratch, create the project directory (SingleNeuronSeq), with a subdirectory for each job (in this case JA15597 and JA16033) and subsubdirectory called 00_rawdata. The argument `-p` will create the parent and subdirectories if they do not already exist.
