@@ -65,7 +65,7 @@ do
     R2=$(basename $R1 R1_001.filtrim.fastq.gz)R2_001.filtrim.fastq.gz
     samp=$(basename $R1 _R1_001.filtrim.fastq.gz)
     echo $R1 $R2 $samp
-    echo "kallisto quant -b 100 -i ../../refs/gencode.vM11.pc_transcripts_kallisto.idx  -o ../05_kallistoquant/${samp} $R1 $R2" >> 04_kallistoquant.cmds
+    echo "kallisto quant -b 100 -i ../../refs/gencode.vM11.pc_transcripts_kallisto.idx  -o ../04_kallistoquant/${samp} $R1 $R2" >> 04_kallistoquant.cmds
 done
 ~~~
 
