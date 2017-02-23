@@ -8,11 +8,13 @@ For each new project or new batch of samples, we can reset these variables and t
 
 ~~~ {.bash}
 ## set the enviornment variables 
-RNAseqProject=BehavEphyRNAseq
-RNAseqJob=JA16444
+RNAseqProject=<BehavEphyRNAseq>
+RNAseqJob=<JA16444>
 ~~~ 
 
-## Download a reference transcriptome
+## Building a refernece index: Only do this once!
+
+### Download a reference transcriptome
 
 Download mouse transcriptome from https://www.gencodegenes.org/mouse_releases/current.html
 
@@ -24,13 +26,13 @@ cd $SCRATCH/$RNAseqProject/refs
 curl -O ftp.sanger.ac.uk/pub/gencode/Gencode_mouse/release_M11/gencode.vM11.pc_transcripts.fa.gz
 ~~~
 
-## 04_kallistoindex
+### 04_kallistoindex
 
-The kallisto index only needs to be built once for each. The manual for running kallisto can be found [here](https://pachterlab.github.io/kallisto/manual)
+The kallisto index only needs to be built once for each. The manual for running kallisto can be found [here](https://pachterlab.github.io/kallisto/manual). I like to keep the same really long prefix "gencode.vM11.pc_transcripts" for the name so that I always know where it came from, rather than shortening it to something like "mouse" or "M11" becuase the full name is more informative. Then, I add "_kallisto.idx" to the end because this tells me that the index is specifically for kallisto, rather than any other alignment/mapper program.
 
 ~~~ {.bash}
 # create the commands file
-echo "kallisto index -i gencode.vM11.pc_transcripts_kallisto.idx $SCRATCH/BehavEphyRNAseq/refs/gencode.vM11.pc_transcripts.fa.gz" > 04_kallisto_index.cmds
+echo "kallisto index -i gencode.vM11.pc_transcripts_kallisto.idx gencode.vM11.pc_transcripts.fa.gz" > 04_kallisto_index.cmds
 cat 04_kallisto_index.cmds
 ~~~
 
@@ -41,9 +43,11 @@ launcher_creator.py -t 0:30:00 -j 04_kallisto_index.cmds -n kallistoindex -l kal
 sbatch 04_kallisto_index.slurm
 ~~~
 
-## 04_kallistoquant
+## Now, let's quantify our transcripts
 
-Now, let's quantify our transcripts
+I'm a big fan of the kallisto program because its super fast and easy to use! Its also becoming more widely used and trusted.
+
+### 04_kallistoquant
 
 Navigate to the directory with the processed reads and make a directory where the output can be stored. 
 
