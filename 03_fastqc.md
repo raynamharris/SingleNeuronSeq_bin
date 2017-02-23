@@ -40,8 +40,6 @@ Then, I moved all the output files to a separate folder where we will store the 
 mkdir ../03_fastqc
 mv *.html ../03_fastqc
 mv *.zip ../03_fastqc
-mv 03_fastqc.e* ../03_fastqc
-mv 03_fastqc.o* ../03_fastqc
 ~~~
 
 ## save locallaly
