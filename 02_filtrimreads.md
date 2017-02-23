@@ -53,7 +53,7 @@ sbatch 02_filtrimmedreads.slurm
 Now, let's make our processed reads read only so we don't accidentally modify them. 
 
 ~~~ {.bash}
-chmod a-w *filtrim.fastq.gz ../02_filtrimmedreads
+chmod a-w *filtrim.fastq.gz 
 ~~~
 
 Now, move the processed reads to a new file.
