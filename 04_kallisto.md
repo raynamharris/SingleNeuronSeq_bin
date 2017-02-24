@@ -78,6 +78,12 @@ sbatch 04_kallistoquant.slurm
 
 Note: The largemem node has compute limitations. If you have two many samples, the job may need to be split in two. One can use the lane identifiers (like L002 and L003) to subset the data. 
 
+## Some quick summary stats
+One of the output files contains information about the number of reads, number of reads mapped, and the average read lenght. We can view that with this command. We can extract that information with grep and awk commands and then save it to a tsv file.
+
+~~~{.bash}echo 'totalreads, pseudoaligned, avelenght' > readsprocessed.csv
+grep -A 1 'processed' 04_kallistoquant.e* | awk 'BEGIN {RS = "--"; OFS="\t"}; {print $3, $5, $13}' > readsprocessed.tsv
+~~~
 
 ## Now, save the data locally
 
