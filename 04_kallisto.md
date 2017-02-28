@@ -39,7 +39,7 @@ cat 04_kallisto_index.cmds
 Then create the launcher script. Kallisto is not a TACC supported module, so we must use the version of Kallisto that was build by TACC user "wallen" and stored in his public directory. 
 
 ~~~ {.bash}
-launcher_creator.py -t 0:30:00 -j 04_kallisto_index.cmds -n kallistoindex -l kallisto_index.slurm -A NeuroEthoEvoDevo -m 'module use -a /work/03439/wallen/public/modulefiles; module load gcc/4.9.1; module load hdf5/1.8.15; module load zlib/1.2.8; module load kallisto/0.42.3'
+launcher_creator.py -t 0:30:00 -j 04_kallisto_index.cmds -n 04_kallistoindex -l 04_kallisto_index.slurm -A NeuroEthoEvoDevo -m 'module use -a /work/03439/wallen/public/modulefiles; module load gcc/4.9.1; module load hdf5/1.8.15; module load zlib/1.2.8; module load kallisto/0.42.3'
 sbatch 04_kallisto_index.slurm
 ~~~
 
